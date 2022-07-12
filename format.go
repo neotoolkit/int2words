@@ -1,4 +1,4 @@
-package int2word
+package int2words
 
 import (
 	"strings"
