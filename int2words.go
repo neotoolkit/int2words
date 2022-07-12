@@ -20,6 +20,7 @@ type integer interface {
 func Convert[T integer](integer T, opts ...Option) string {
 	options := Options{
 		dict: Dict{
+			Zero:    "zero",
 			Minus:   "minus",
 			Hundred: "hundred",
 			Mega:    []string{"", "thousand", "million", "billion", "trillion", "quadrillion", "quintillion", "sextillion", "septillion", "octillion", "nonillion", "decillion", "undecillion", "duodecillion", "tredecillion", "quattuordecillion"},
@@ -34,6 +35,10 @@ func Convert[T integer](integer T, opts ...Option) string {
 
 	for _, opt := range opts {
 		opt(&options)
+	}
+
+	if integer == 0 {
+		return options.dict.Zero
 	}
 
 	var res []string
@@ -97,11 +102,24 @@ type Options struct {
 
 func SetDict(d Dict) Option {
 	return func(opts *Options) {
+		if d.Mega[0] != "" {
+			d.Mega = append(d.Mega[:1], d.Mega[0:]...)
+			d.Mega[0] = ""
+		}
+		if d.Unit[0] != "" {
+			d.Unit = append(d.Unit[:1], d.Unit[0:]...)
+			d.Unit[0] = ""
+		}
+		if d.Ten[0] != "" {
+			d.Ten = append(d.Ten[:1], d.Ten[0:]...)
+			d.Ten[0] = ""
+		}
 		opts.dict = d
 	}
 }
 
 type Dict struct {
+	Zero    string
 	Minus   string
 	Hundred string
 	Mega    []string
