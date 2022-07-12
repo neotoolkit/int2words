@@ -6,7 +6,7 @@
 [![coverage-img]][coverage-url]
 [![version-img]][version-url]
 
-Integer to word converter
+Integer to words converter
 
 ## Features
 - Zero dependencies
