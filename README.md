@@ -13,6 +13,8 @@ Integer to words converter
 - Easy to integrate.
 
 ## Installation
+Go version 1.18+
+
 ```shell
 go get github.com/neotoolkit/int2words
 ```
