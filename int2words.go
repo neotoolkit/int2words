@@ -75,14 +75,12 @@ func Convert[T integer](integer T, opts ...Option) string {
 			res = append(res, options.dict.Unit[units])
 		case 1:
 			res = append(res, options.dict.Teen[units])
-			break
 		default:
 			if units > 0 {
 				res = append(res, options.dict.Ten[tens], options.dict.Unit[units])
 			} else {
 				res = append(res, options.dict.Ten[tens])
 			}
-			break
 		}
 
 		if mega := options.dict.Mega[i]; mega != "" {
