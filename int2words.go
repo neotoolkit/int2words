@@ -23,7 +23,7 @@ func Convert[T integer](integer T, opts ...Option) string {
 			Zero:    "zero",
 			Minus:   "minus",
 			Hundred: "hundred",
-			Mega:    []string{"", "thousand", "million", "billion", "trillion", "quadrillion", "quintillion", "sextillion", "septillion", "octillion", "nonillion", "decillion", "undecillion", "duodecillion", "tredecillion", "quattuordecillion"},
+			Mega:    []string{"", "thousand", "million", "billion", "trillion", "quadrillion", "quintillion"},
 			Unit:    []string{"", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"},
 			Ten:     []string{"", "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"},
 			Teen:    []string{"ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"},
