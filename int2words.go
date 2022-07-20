@@ -28,7 +28,7 @@ func Convert[T integer](integer T, opts ...Option) string {
 			Ten:     []string{"", "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"},
 			Teen:    []string{"ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen"},
 		},
-		format: func(words []string) string {
+		format: func(words ...string) string {
 			return strings.Join(words, " ")
 		},
 	}
@@ -38,7 +38,7 @@ func Convert[T integer](integer T, opts ...Option) string {
 	}
 
 	if integer == 0 {
-		return cfg.dict.Zero
+		return cfg.format(cfg.dict.Zero)
 	}
 
 	var res []string
@@ -88,13 +88,13 @@ func Convert[T integer](integer T, opts ...Option) string {
 		}
 	}
 
-	return cfg.format(res)
+	return cfg.format(res...)
 }
 
 type (
 	Config struct {
 		dict   Dict
-		format func(words []string) string
+		format func(words ...string) string
 	}
 
 	Option func(cfg *Config)
@@ -110,25 +110,7 @@ type Dict struct {
 	Teen    []string
 }
 
-func WithDict(d Dict) Option {
-	return func(cfg *Config) {
-		if d.Mega[0] != "" {
-			d.Mega = append(d.Mega[:1], d.Mega[0:]...)
-			d.Mega[0] = ""
-		}
-		if d.Unit[0] != "" {
-			d.Unit = append(d.Unit[:1], d.Unit[0:]...)
-			d.Unit[0] = ""
-		}
-		if d.Ten[0] != "" {
-			d.Ten = append(d.Ten[:1], d.Ten[0:]...)
-			d.Ten[0] = ""
-		}
-		cfg.dict = d
-	}
-}
-
-func WithFormat(format func(words []string) string) Option {
+func WithFormat(format func(words ...string) string) Option {
 	return func(cfg *Config) {
 		cfg.format = format
 	}
