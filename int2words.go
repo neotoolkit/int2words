@@ -18,7 +18,7 @@ type integer interface {
 }
 
 func Convert[T integer](integer T, opts ...Option) string {
-	options := Options{
+	cfg := Config{
 		dict: Dict{
 			Zero:    "zero",
 			Minus:   "minus",
@@ -34,17 +34,17 @@ func Convert[T integer](integer T, opts ...Option) string {
 	}
 
 	for _, opt := range opts {
-		opt(&options)
+		opt(&cfg)
 	}
 
 	if integer == 0 {
-		return options.dict.Zero
+		return cfg.dict.Zero
 	}
 
 	var res []string
 
 	if integer < 0 {
-		res = append(res, options.dict.Minus)
+		res = append(res, cfg.dict.Minus)
 		integer = T(math.Abs(float64(integer)))
 	}
 
@@ -67,39 +67,51 @@ func Convert[T integer](integer T, opts ...Option) string {
 		units := triplet % 10
 
 		if hundreds > 0 {
-			res = append(res, options.dict.Unit[hundreds], options.dict.Hundred)
+			res = append(res, cfg.dict.Unit[hundreds], cfg.dict.Hundred)
 		}
 
 		switch tens {
 		case 0:
-			res = append(res, options.dict.Unit[units])
+			res = append(res, cfg.dict.Unit[units])
 		case 1:
-			res = append(res, options.dict.Teen[units])
+			res = append(res, cfg.dict.Teen[units])
 		default:
 			if units > 0 {
-				res = append(res, options.dict.Ten[tens], options.dict.Unit[units])
+				res = append(res, cfg.dict.Ten[tens], cfg.dict.Unit[units])
 			} else {
-				res = append(res, options.dict.Ten[tens])
+				res = append(res, cfg.dict.Ten[tens])
 			}
 		}
 
-		if mega := options.dict.Mega[i]; mega != "" {
-			res = append(res, options.dict.Mega[i])
+		if mega := cfg.dict.Mega[i]; mega != "" {
+			res = append(res, cfg.dict.Mega[i])
 		}
 	}
 
-	return options.format(res)
+	return cfg.format(res)
 }
 
-type Option func(opts *Options)
+type (
+	Config struct {
+		dict   Dict
+		format func(words []string) string
+	}
 
-type Options struct {
-	dict   Dict
-	format func(words []string) string
+	Option func(cfg *Config)
+)
+
+type Dict struct {
+	Zero    string
+	Minus   string
+	Hundred string
+	Mega    []string
+	Unit    []string
+	Ten     []string
+	Teen    []string
 }
 
-func SetDict(d Dict) Option {
-	return func(opts *Options) {
+func WithDict(d Dict) Option {
+	return func(cfg *Config) {
 		if d.Mega[0] != "" {
 			d.Mega = append(d.Mega[:1], d.Mega[0:]...)
 			d.Mega[0] = ""
@@ -112,22 +124,12 @@ func SetDict(d Dict) Option {
 			d.Ten = append(d.Ten[:1], d.Ten[0:]...)
 			d.Ten[0] = ""
 		}
-		opts.dict = d
+		cfg.dict = d
 	}
 }
 
-type Dict struct {
-	Zero    string
-	Minus   string
-	Hundred string
-	Mega    []string
-	Unit    []string
-	Ten     []string
-	Teen    []string
-}
-
-func SetFormat(format func(words []string) string) Option {
-	return func(opts *Options) {
-		opts.format = format
+func WithFormat(format func(words []string) string) Option {
+	return func(cfg *Config) {
+		cfg.format = format
 	}
 }
