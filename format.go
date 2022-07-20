@@ -6,7 +6,7 @@ import (
 )
 
 func WithUpperCamelCaseFormat() Option {
-	return WithFormat(func(words []string) string {
+	return WithFormat(func(words ...string) string {
 		for i, v := range words {
 			word := []rune(v)
 			word[0] = unicode.ToTitle(word[0])
@@ -17,7 +17,7 @@ func WithUpperCamelCaseFormat() Option {
 }
 
 func WithLowerCamelCaseFormat() Option {
-	return WithFormat(func(words []string) string {
+	return WithFormat(func(words ...string) string {
 		for i, v := range words {
 			if i == 0 {
 				continue
@@ -31,13 +31,13 @@ func WithLowerCamelCaseFormat() Option {
 }
 
 func WithSnakeCaseFormat() Option {
-	return WithFormat(func(words []string) string {
+	return WithFormat(func(words ...string) string {
 		return strings.Join(words, "_")
 	})
 }
 
 func WithKebabCaseFormat() Option {
-	return WithFormat(func(words []string) string {
+	return WithFormat(func(words ...string) string {
 		return strings.Join(words, "-")
 	})
 }
